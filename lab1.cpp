@@ -76,19 +76,19 @@ void findMiddle(Node* head) {
 }
 
 // Bai 2: Detect a Cycle in a Linked List
-bool detectCycle(Node* head) {
-    unordered_set<Node*> visited;
+bool detectValueCycle(Node* head) {
+    unordered_set<int> visitedValues; // Tập hợp để theo dõi các giá trị đã gặp
     Node* current = head;
 
     while (current != nullptr) {
-        if (visited.find(current) != visited.end()) {
-            return true;  // Cycle detected
+        if (visitedValues.find(current->data) != visitedValues.end()) {
+            return true;  // Giá trị đã được gặp, coi như có "vòng"
         }
-        visited.insert(current);
-        current = current->next;
+        visitedValues.insert(current->data); // Thêm giá trị vào tập hợp
+        current = current->next; // Di chuyển đến nút tiếp theo
     }
 
-    return false;  // No cycle detected
+    return false;  // Không phát hiện vòng
 }
 
 // Bai 3: Combine Two Sorted Linked Lists
