@@ -1,73 +1,38 @@
 #include <iostream>
-#include <stack>
 #include <string>
 using namespace std;
 
-stack<string> backStack, forwardStack;
-string currentURL = "homepage";
+struct ResearchPaper {
+    string title;
+    string abstract;
+    string keywords[5];  // Giới hạn 5 từ khóa
+};
 
-// Function to visit a new URL
-void visit(const string& url) {
-    if (currentURL != "") {
-        backStack.push(currentURL);  // Push current URL to backStack
+bool searchInKeywords(string keywords[], int keywordCount, string query) {
+    for (int i = 0; i < keywordCount; i++) {
+        if (keywords[i] == query) {
+            return true;
+        }
     }
-    currentURL = url;  // Update current URL
-    // Clear forwardStack after visiting a new URL
-    while (!forwardStack.empty()) {
-        forwardStack.pop();
-    }
-    cout << "Visiting: " << currentURL << endl;
+    return false;
 }
 
-// Function to go back to the previous URL
-void goBack() {
-    if (backStack.empty()) {
-        cout << "Cannot go back\n";
-        return;
+void searchPapers(ResearchPaper papers[], int n, string query) {
+    for (int i = 0; i < n; i++) {
+        if (papers[i].title.find(query) != string::npos || papers[i].abstract.find(query) != string::npos ||
+            searchInKeywords(papers[i].keywords, 5, query)) {
+            cout << "Bài báo: " << papers[i].title << ", Tóm tắt: " << papers[i].abstract << endl;
+        }
     }
-    forwardStack.push(currentURL);  // Push current URL to forwardStack
-    currentURL = backStack.top();   // Get the previous URL from backStack
-    backStack.pop();                // Remove the previous URL from backStack
-    cout << "Going back to: " << currentURL << endl;
-}
-
-// Function to go forward to the next URL
-void goForward() {
-    if (forwardStack.empty()) {
-        cout << "Cannot go forward\n";
-        return;
-    }
-    backStack.push(currentURL);     // Push current URL to backStack
-    currentURL = forwardStack.top(); // Get the next URL from forwardStack
-    forwardStack.pop();              // Remove the next URL from forwardStack
-    cout << "Going forward to: " << currentURL << endl;
 }
 
 int main() {
-    int choice;
-    string url;
-    do {
-        cout << "\n1. Visit a new URL\n2. Go back\n3. Go forward\n4. Exit\nEnter your choice: ";
-        cin >> choice;
-        switch (choice) {
-            case 1:
-                cout << "Enter URL to visit: ";
-                cin >> url;
-                visit(url);
-                break;
-            case 2:
-                goBack();
-                break;
-            case 3:
-                goForward();
-                break;
-            case 4:
-                cout << "Exiting...\n";
-                break;
-            default:
-                cout << "Invalid choice, try again.\n";
-        }
-    } while (choice != 4);
-
+    ResearchPaper papers[] = {
+        {"AI in Healthcare", "Ứng dụng AI trong y tế", {"AI", "Healthcare", "Machine Learning", "", ""}},
+        {"Machine Learning Basics", "Cơ bản về máy học", {"Machine Learning", "AI", "", "", ""}}
+    };
+    int n = sizeof(papers) / sizeof(papers[0]);
+    string query = "AI";
+    searchPapers(papers, n, query);
     return 0;
 }

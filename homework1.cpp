@@ -1,25 +1,31 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
-// Function to move a disk from one peg to another
-void moveDisk(int n, char from_peg, char to_peg, char aux_peg) {
-    if (n == 1) {
-        cout << "Move disk 1 from peg " << from_peg << " to peg " << to_peg << endl;
-        return;
+struct Product {
+    string name;
+    string category;
+    double price;
+    string description;
+};
+
+void searchProducts(Product products[], int n, string query) {
+    for (int i = 0; i < n; i++) {
+        if (products[i].name.find(query) != string::npos || products[i].description.find(query) != string::npos) {
+            cout << "Sản phẩm: " << products[i].name << ", Giá: " << products[i].price 
+                 << ", Mô tả: " << products[i].description << endl;
+        }
     }
-    // Move n-1 disks from 'from_peg' to 'aux_peg', using 'to_peg' as auxiliary
-    moveDisk(n - 1, from_peg, aux_peg, to_peg);
-    // Move the last disk from 'from_peg' to 'to_peg'
-    cout << "Move disk " << n << " from peg " << from_peg << " to peg " << to_peg << endl;
-    // Move n-1 disks from 'aux_peg' to 'to_peg', using 'from_peg' as auxiliary
-    moveDisk(n - 1, aux_peg, to_peg, from_peg);
 }
 
 int main() {
-    int n;
-    cout << "Enter the number of disks: ";
-    cin >> n;
-    cout << "The steps to move the disks:\n";
-    moveDisk(n, 'A', 'C', 'B');  // A is the starting peg, C is the destination peg, B is the auxiliary peg
+    Product products[] = {
+        {"iPhone", "Điện thoại", 999.99, "Điện thoại Apple iPhone"},
+        {"MacBook", "Laptop", 1999.99, "Laptop Apple MacBook"},
+        {"AirPods", "Phụ kiện", 199.99, "Tai nghe Apple AirPods"}
+    };
+    int n = sizeof(products) / sizeof(products[0]);
+    string query = "Apple";
+    searchProducts(products, n, query);
     return 0;
 }

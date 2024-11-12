@@ -1,46 +1,34 @@
 #include <iostream>
-#include <vector>
-#include <stack>
+#include <string>
 using namespace std;
 
-vector<int> canSee(const vector<int>& heights) {
-    int n = heights.size();
-    vector<int> answer(n, 0);  // Kết quả sẽ lưu số lượng người mà mỗi người có thể nhìn thấy
+struct Patient {
+    int id;
+    string name;
+    string dateOfBirth;
+    string contact;
+};
 
-    for (int i = 0; i < n; ++i) {
-        int count = 0;
-        for (int j = i + 1; j < n; ++j) {
-            if (heights[j] > heights[i]) {  // Nếu người này cao hơn, kết thúc đếm
-                count++;
-                break;
-            } else {  // Nếu người này thấp hơn, tiếp tục đếm
-                count++;
-            }
+void searchPatientByID(Patient patients[], int n, int targetID) {
+    for (int i = 0; i < n; i++) {
+        if (patients[i].id == targetID) {
+            cout << "Bệnh nhân tìm thấy: " << patients[i].name 
+                 << ", Ngày sinh: " << patients[i].dateOfBirth 
+                 << ", Liên hệ: " << patients[i].contact << endl;
+            return;
         }
-        answer[i] = count;  // Ghi nhận số người có thể nhìn thấy cho người i
     }
-
-    return answer;
+    cout << "Bệnh nhân không tìm thấy." << endl;
 }
 
 int main() {
-    int n;
-    cout << "Enter number of people: ";
-    cin >> n;
-
-    vector<int> heights(n);
-    cout << "Enter heights of people: ";
-    for (int i = 0; i < n; i++) {
-        cin >> heights[i];
-    }
-
-    vector<int> result = canSee(heights);
-
-    cout << "Result: ";
-    for (int x : result) {
-        cout << x << " ";
-    }
-    cout << endl;
-
+    Patient patients[] = {
+        {1, "Nguyen Van A", "01/01/1980", "0123456789"},
+        {2, "Le Thi B", "02/02/1990", "0987654321"},
+        {3, "Tran Van C", "03/03/2000", "0765432189"}
+    };
+    int n = sizeof(patients) / sizeof(patients[0]);
+    int targetID = 2;
+    searchPatientByID(patients, n, targetID);
     return 0;
 }

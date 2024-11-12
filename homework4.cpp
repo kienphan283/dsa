@@ -1,34 +1,45 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <string>
 using namespace std;
 
-int minCoins(vector<int>& prices) {
-    int n = prices.size();
-    sort(prices.begin(), prices.end());  // Sort prices in ascending order
-    int totalCoins = 0;
+struct Node {
+    string url;
+    int timestamp;
+    Node *left, *right;
+};
 
-    for (int i = 0; i < n; i += 2) {
-        totalCoins += prices[i];  // Buy fruit i, get fruit i+1 for free
-    }
+Node* createNode(string url, int timestamp) {
+    Node* node = new Node();
+    node->url = url;
+    node->timestamp = timestamp;
+    node->left = node->right = nullptr;
+    return node;
+}
 
-    return totalCoins;
+Node* insertNode(Node* root, string url, int timestamp) {
+    if (root == nullptr) return createNode(url, timestamp);
+    if (url < root->url) root->left = insertNode(root->left, url, timestamp);
+    else if (url > root->url) root->right = insertNode(root->right, url, timestamp);
+    return root;
+}
+
+Node* searchURL(Node* root, string url) {
+    if (root == nullptr || root->url == url) return root;
+    if (url < root->url) return searchURL(root->left, url);
+    return searchURL(root->right, url);
 }
 
 int main() {
-    int n;
-    cout << "Enter the number of fruits: ";
-    cin >> n;
-    vector<int> prices(n);
-    
-    cout << "Enter the prices of fruits: ";
-    for (int i = 0; i < n; i++) {
-        cin >> prices[i];
-    }
+    Node* root = nullptr;
+    root = insertNode(root, "google.com", 1);
+    root = insertNode(root, "facebook.com", 2);
+    root = insertNode(root, "youtube.com", 3);
 
-    int result = minCoins(prices);
-
-    cout << "Minimum coins required: " << result << " coins" << endl;
-    
+    string searchUrl = "facebook.com";
+    Node* result = searchURL(root, searchUrl);
+    if (result)
+        cout << "Trang web " << result->url << " tìm thấy với timestamp: " << result->timestamp << endl;
+    else
+        cout << "Trang web không tìm thấy." << endl;
     return 0;
 }
